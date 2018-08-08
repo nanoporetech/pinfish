@@ -10,6 +10,8 @@ Pinfish is a collection of tools helping to make sense of long transcriptomics d
 
 Pinfish is largely inspired by the [Mandalorion](https://www.nature.com/articles/ncomms16027) pipeline. It is meant to provide a quick way for generating annotations from long reads only and it is not meant to provide the same functionality as pipelines using a broader strategy for annotation (such as [LoReAn](https://www.biorxiv.org/content/early/2017/12/08/230359)).
 
+The pinfish tools can be run via a [Snakemake](https://snakemake.readthedocs.io/en/stable/) [pipeline](LINK) which handles the alignment tasks using `minimap2`.
+
 Installation
 ------------
 
