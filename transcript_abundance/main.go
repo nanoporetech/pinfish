@@ -7,6 +7,9 @@ import (
 	"runtime"
 )
 
+// This application is a reimplementation of a Python script written by Jared Simpson:
+// https://github.com/jts/nanopore-rna-analysis/blob/master/nanopore_transcript_abundance.py
+
 func main() {
 	L = NewLogger("spliced_bam2gff: ", log.Ltime)
 
