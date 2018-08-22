@@ -64,7 +64,10 @@ func strToInt(s string) int {
 func NewPafReader(paf string) chan *PafRecord {
 	pafChan := make(chan *PafRecord, 5000)
 
-	fh := openFile(paf)
+	fh := os.Stdin
+	if paf != "-" {
+		fh = openFile(paf)
+	}
 	reader := bufio.NewReader(fh)
 
 	go func() {

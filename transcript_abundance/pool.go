@@ -48,7 +48,9 @@ func (p *TranscriptPool) LoadCompatibility(pafChan chan *PafRecord) {
 		currRecords = append(currRecords, pafRec)
 	}
 	// Process loast read:
-	p.GetCompatibility(currRecords)
+	if len(currRecords) > 0 {
+		p.GetCompatibility(currRecords)
+	}
 
 }
 
