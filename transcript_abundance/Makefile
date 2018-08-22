@@ -41,5 +41,5 @@ clean:
 	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
 t:
-	./transcript_abundance test_data/alignments.paf
+	@./transcript_abundance test_data/alignments.paf
 
