@@ -11,7 +11,7 @@ import (
 // https://github.com/jts/nanopore-rna-analysis/blob/master/nanopore_transcript_abundance.py
 
 func main() {
-	L = NewLogger("spliced_bam2gff: ", log.Ltime)
+	L = NewLogger("transcript_abundance: ", log.Ltime)
 
 	// Parse command line arguments:
 	args := new(CmdArgs)
@@ -24,7 +24,7 @@ func main() {
 	pafChan := NewPafReader(args.InputFiles[0])
 
 	// Initialise new pool:
-	pool := NewTranscriptPool()
+	pool := NewTranscriptPool(int(args.MinReadLength), args.ScoreThreshold, args.AlnThreshold)
 
 	// Load compatibility from mappings:
 	pool.LoadCompatibility(pafChan)

@@ -12,13 +12,19 @@ type CompRecord struct {
 
 // Master structure:
 type TranscriptPool struct {
-	Compat map[string][]CompRecord
+	Compat         map[string][]CompRecord
+	MinReadLength  int
+	ScoreThreshold float64
+	AlnThreshold   float64
 }
 
 // Create new master structure:
-func NewTranscriptPool() *TranscriptPool {
+func NewTranscriptPool(minReadLength int, scoreThreshold float64, alnThreshold float64) *TranscriptPool {
 	p := new(TranscriptPool)
 	p.Compat = make(map[string][]CompRecord)
+	p.MinReadLength = minReadLength
+	p.ScoreThreshold = scoreThreshold
+	p.AlnThreshold = alnThreshold
 	return p
 }
 
@@ -52,11 +58,11 @@ func (p *TranscriptPool) GetCompatibility(recs []*PafRecord) {
 	// FIXME:
 	fullLengthMinDistance := 20
 	// Minimum read length:
-	minReadLength := 0
+	minReadLength := p.MinReadLength
 	// Minimum score threshold when considering equivalence:
-	threshold := 0.95
+	threshold := p.ScoreThreshold
 	// Minimum fraction aligned of best match:
-	alignmentThreshold := 0.5
+	alignmentThreshold := p.AlnThreshold
 
 	//Determine best match:
 	readLength := recs[0].QueryLength
