@@ -20,16 +20,22 @@ func main() {
 	// Set the maximum number of OS threads to use:
 	runtime.GOMAXPROCS(int(args.MaxProcs))
 
+	// Open new PAF reader:
 	pafChan := NewPafReader(args.InputFiles[0])
 
+	// Initialise new pool:
 	pool := NewTranscriptPool()
 
+	// Load compatibility from mappings:
 	pool.LoadCompatibility(pafChan)
 
+	// Estimate abundances by EM:
 	pool.EmEstimate(int(args.NrIter))
 
+	// Get final abundances:
 	abundances := pool.Abundances()
 
+	// Print out counts:
 	SaveCounts(abundances, len(pool.Compat))
 
 }

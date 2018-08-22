@@ -51,6 +51,7 @@ func openFile(file string) *os.File {
 	return f
 }
 
+// Convert string to integer:
 func strToInt(s string) int {
 	res, err := strconv.Atoi(s)
 	if err != nil {
@@ -59,6 +60,7 @@ func strToInt(s string) int {
 	return res
 }
 
+// New PAF reader:
 func NewPafReader(paf string) chan *PafRecord {
 	pafChan := make(chan *PafRecord, 5000)
 

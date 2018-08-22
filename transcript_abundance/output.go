@@ -5,6 +5,8 @@ import (
 	"sort"
 )
 
+// List of CompRecord structures to hold transcript
+// abundances:
 type TrsAbd []CompRecord
 
 func (s TrsAbd) Len() int {
@@ -17,6 +19,7 @@ func (s TrsAbd) Less(i, j int) bool {
 	return s[i].Prob > s[j].Prob
 }
 
+// Print out sorted estimated counts:
 func SaveCounts(abd map[string]float64, totalReads int) {
 	fmt.Println("Reference\tCount")
 	trsAbd := make(TrsAbd, 0, len(abd))
