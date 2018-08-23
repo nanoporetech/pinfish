@@ -38,4 +38,9 @@ func main() {
 	// Print out counts:
 	SaveCounts(abundances, len(pool.Compat))
 
+	// Save final compatibility information:
+	if args.CompFile != "" {
+		pool.SaveCompatibilities(args.CompFile)
+	}
+
 }

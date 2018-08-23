@@ -1,7 +1,8 @@
 package main
 
 import (
-//"fmt"
+	"fmt"
+	"os"
 )
 
 // Compatibility structure:
@@ -166,4 +167,32 @@ func (p *TranscriptPool) UpdateCompatibility(abundances map[string]float64) {
 		}
 	}
 
+}
+
+// Save compatibility information:
+func (p *TranscriptPool) SaveCompatibilities(cf string) {
+	fh, err := os.Create(cf)
+	if err != nil {
+		L.Fatalf("Could not create compatibility file %s: %s\n", cf, err)
+	}
+
+	for read, comps := range p.Compat {
+		line := read + "\t"
+		for i, c := range comps {
+			line += c.Target
+			if i != len(comps)-1 {
+				line += ","
+			}
+		}
+		line += "\t"
+		for i, c := range comps {
+			line += fmt.Sprintf("%f", c.Prob)
+			if i != len(comps)-1 {
+				line += ","
+			}
+		}
+		line += "\n"
+		fh.WriteString(line)
+	}
+	fh.Close()
 }
