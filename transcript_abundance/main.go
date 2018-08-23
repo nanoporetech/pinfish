@@ -10,12 +10,15 @@ import (
 // This application is a reimplementation of a Python script written by Jared Simpson:
 // https://github.com/jts/nanopore-rna-analysis/blob/master/nanopore_transcript_abundance.py
 
+var VERBOSE bool
+
 func main() {
 	L = NewLogger("transcript_abundance: ", log.Ltime)
 
 	// Parse command line arguments:
 	args := new(CmdArgs)
 	args.Parse()
+	VERBOSE = args.Verbose
 
 	// Set the maximum number of OS threads to use:
 	runtime.GOMAXPROCS(int(args.MaxProcs))

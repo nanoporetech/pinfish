@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gopkg.in/cheggaaa/pb.v2"
 	"os"
 )
 
@@ -26,6 +27,13 @@ func NewTranscriptPool(minReadLength int, scoreThreshold float64, alnThreshold f
 	p.MinReadLength = minReadLength
 	p.ScoreThreshold = scoreThreshold
 	p.AlnThreshold = alnThreshold
+
+	if VERBOSE {
+		L.Printf("Minimum read length is %d.\n", p.MinReadLength)
+		L.Printf("Score threshold is %f.\n", p.ScoreThreshold)
+		L.Printf("Alignment threshold is %f.\n", p.AlnThreshold)
+	}
+
 	return p
 }
 
@@ -34,6 +42,7 @@ func (p *TranscriptPool) LoadCompatibility(pafChan chan *PafRecord) {
 	prevReadName := ""
 	var currRecords []*PafRecord
 
+	recCount := 0
 	// Iterate over PAF records:
 	for pafRec := range pafChan {
 		// If read changes...
@@ -47,10 +56,15 @@ func (p *TranscriptPool) LoadCompatibility(pafChan chan *PafRecord) {
 		// Add PAF record to buffer:
 
 		currRecords = append(currRecords, pafRec)
+		recCount++
 	}
 	// Process loast read:
 	if len(currRecords) > 0 {
 		p.GetCompatibility(currRecords)
+	}
+
+	if VERBOSE {
+		L.Printf("Loaded %d alignment records for %d reads.\n", recCount, len(p.Compat))
 	}
 
 }
@@ -117,12 +131,27 @@ func (p *TranscriptPool) GetCompatibility(recs []*PafRecord) {
 
 // Estimate abundances by EM:
 func (p *TranscriptPool) EmEstimate(niter int) {
+	var bar *pb.ProgressBar
+	if VERBOSE {
+		L.Printf("Estimating transcript abundances by EM:\n")
+		bar = pb.StartNew(niter)
+	}
+
 	for i := 0; i < niter; i++ {
 		// Estimate abundances from compatibilities:
 		abundances := p.Abundances()
 		// Update compatibilities:
 		p.UpdateCompatibility(abundances)
+		if VERBOSE {
+			bar.Add(1)
+		}
+
 	}
+
+	if VERBOSE {
+		bar.Finish()
+	}
+
 }
 
 // Calculate transcript abundances:
@@ -174,6 +203,9 @@ func (p *TranscriptPool) SaveCompatibilities(cf string) {
 	fh, err := os.Create(cf)
 	if err != nil {
 		L.Fatalf("Could not create compatibility file %s: %s\n", cf, err)
+	}
+	if VERBOSE {
+		L.Printf("Saving compatibility information to %s.\n", cf)
 	}
 
 	for read, comps := range p.Compat {
