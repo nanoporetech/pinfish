@@ -40,6 +40,7 @@ install:
 clean:
 	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
-t:
+## Run on a small example dataset:
+test:
 	@./transcript_abundance -v -n 10 -c test_data/compat_out.tsv test_data/alignments.paf > test_data/abundance_out.tsv
 
