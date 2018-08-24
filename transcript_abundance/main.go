@@ -27,7 +27,7 @@ func main() {
 	pafChan := NewPafReader(args.InputFiles[0])
 
 	// Initialise new pool:
-	pool := NewTranscriptPool(int(args.MinReadLength), args.ScoreThreshold, args.AlnThreshold)
+	pool := NewTranscriptPool(int(args.MinReadLength), args.ScoreThreshold, args.AlnThreshold, int(args.FullLenMax))
 
 	// Load compatibility from mappings:
 	pool.LoadCompatibility(pafChan)

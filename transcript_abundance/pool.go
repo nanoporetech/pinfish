@@ -16,20 +16,23 @@ type CompRecord struct {
 type TranscriptPool struct {
 	Compat         map[string][]CompRecord
 	MinReadLength  int
+	FullLenMax     int
 	ScoreThreshold float64
 	AlnThreshold   float64
 }
 
 // Create new master structure:
-func NewTranscriptPool(minReadLength int, scoreThreshold float64, alnThreshold float64) *TranscriptPool {
+func NewTranscriptPool(minReadLength int, scoreThreshold float64, alnThreshold float64, fullLenMax int) *TranscriptPool {
 	p := new(TranscriptPool)
 	p.Compat = make(map[string][]CompRecord)
 	p.MinReadLength = minReadLength
+	p.FullLenMax = fullLenMax
 	p.ScoreThreshold = scoreThreshold
 	p.AlnThreshold = alnThreshold
 
 	if VERBOSE {
 		L.Printf("Minimum read length is %d.\n", p.MinReadLength)
+		L.Printf("Maximum distance of full length read from start is %d.\n", p.FullLenMax)
 		L.Printf("Score threshold is %f.\n", p.ScoreThreshold)
 		L.Printf("Alignment threshold is %f.\n", p.AlnThreshold)
 	}
@@ -73,7 +76,7 @@ func (p *TranscriptPool) GetCompatibility(recs []*PafRecord) {
 
 	// Minimum distance from start to be considered full length:
 	// FIXME:
-	fullLengthMinDistance := 20
+	fullLengthMinDistance := p.FullLenMax
 	// Minimum read length:
 	minReadLength := p.MinReadLength
 	// Minimum score threshold when considering equivalence:

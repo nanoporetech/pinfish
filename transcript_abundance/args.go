@@ -15,6 +15,7 @@ type CmdArgs struct {
 	NrIter         int64
 	CompFile       string
 	MinReadLength  int64
+	FullLenMax     int64
 	ScoreThreshold float64
 	AlnThreshold   float64
 	Verbose        bool
@@ -29,6 +30,7 @@ func (a *CmdArgs) Parse() {
 	flag.Int64Var(&a.MaxProcs, "t", 4, "Maximum number of cores to use.")
 	flag.Int64Var(&a.NrIter, "n", 10, "Number of EM iterations.")
 	flag.Int64Var(&a.MinReadLength, "m", 0, "Minimum read length.")
+	flag.Int64Var(&a.FullLenMax, "f", 20, "Maximum distance from start when classifying as full length.")
 	flag.Float64Var(&a.AlnThreshold, "a", 0.5, "Minimum aligned fraction for the best hit.")
 	flag.Float64Var(&a.ScoreThreshold, "s", 0.95, "Score threshold used when considering equivalent hits.")
 	flag.BoolVar(&a.Verbose, "v", false, "Be verbose.")
