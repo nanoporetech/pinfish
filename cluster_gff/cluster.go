@@ -118,7 +118,7 @@ func SoftRelated(tr *gene.CodingTranscript, cache []*gene.CodingTranscript, EndB
 	if len(cache) == 0 {
 		return true
 	}
-	// Search for sof matching transcript in cache:
+	// Search for soft matching transcript in cache:
 	for _, targetTr := range cache {
 		if TranscriptsSoftRelated(tr, targetTr, EndBoundaryTolerance) {
 			return true
