@@ -28,6 +28,7 @@ func openFile(file string) *os.File {
 // Decide between fastq and fasta input formats:
 func GuessFormat(file string) string {
 	reader := openFile(file)
+	defer reader.Close()
 	sc := bufio.NewScanner(reader)
 	sc.Scan()
 	first_line := string(sc.Text())
@@ -38,7 +39,6 @@ func GuessFormat(file string) string {
 	} else {
 		L.Fatalf("Cannot guess format for file: %s\nFirst line: %s", file, first_line)
 	}
-	reader.Close()
 	return ""
 }
 
