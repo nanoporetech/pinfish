@@ -192,7 +192,7 @@ For running tests the following dependencies have to be installed:
 Both are easy to install using [bioconda](https://bioconda.github.io). 
 Look into the `Makefiles` for targets testing the tools on simulated and real data.
 
-5\. Help:
+4\. Help:
 ---------
 
 ## Licence and Copyright:
