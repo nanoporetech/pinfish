@@ -1,3 +1,7 @@
+![ONT_logo](/ONT_logo.png)
+
+-----------------------------
+
 pinfish - tools to annotate genomes using long read transcriptomics data
 ========================================================================
 
