@@ -2,8 +2,8 @@
 
 -----------------------------
 
-pinfish - tools to annotate genomes using long read transcriptomics data
-========================================================================
+pinfish
+=======
 
 Pinfish is a collection of tools helping to make sense of long transcriptomics data (long cDNA reads, direct RNA reads). The toolchain is composed of the following tools:
 
