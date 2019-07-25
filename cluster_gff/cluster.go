@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"github.com/biogo/biogo/feat/gene"
-	"github.com/google/uuid"
 )
 
 // Struct to hold a transcript cluster:
@@ -25,6 +25,7 @@ func ClusterTranscriptStream(trStream chan *gene.CodingTranscript, BoundaryToler
 	// Cache to hold transcript belonging to the same group:
 	cache := make([]*gene.CodingTranscript, 0, 1000)
 	go func() {
+		groupCount := 0
 		// Pull transcripts:
 		for tr := range trStream {
 
@@ -37,14 +38,16 @@ func ClusterTranscriptStream(trStream chan *gene.CodingTranscript, BoundaryToler
 				tmp := make([]*gene.CodingTranscript, len(cache))
 				copy(tmp, cache)
 				// Process group to generate clusters:
-				ProcessCache(tmp, BoundaryTolerance, EndBoundaryTolerance, clusterChan)
+				ProcessCache(groupCount, tmp, BoundaryTolerance, EndBoundaryTolerance, clusterChan)
+				groupCount++
 				// Add the current transcript to cache as new group:
 				cache = cache[:1]
 				cache[0] = tr
 			}
 		}
 		// Process last group:
-		ProcessCache(cache, BoundaryTolerance, EndBoundaryTolerance, clusterChan)
+		groupCount++
+		ProcessCache(groupCount, cache, BoundaryTolerance, EndBoundaryTolerance, clusterChan)
 
 		close(clusterChan)
 	}()
@@ -74,32 +77,34 @@ func searchClusters(tr *gene.CodingTranscript, clusters []*TranscriptCluster, Bo
 }
 
 // Create new cluster having the specified group id and a unique id.
-func NewCluster(groupID string, locusSize int) *TranscriptCluster {
+func NewCluster(groupID string, clsId int, locusSize int) *TranscriptCluster {
 	newCls := new(TranscriptCluster)
 	newCls.GroupID = groupID
-	newCls.ID = uuid.New().String()
+	newCls.ID = fmt.Sprintf("%s.%d", groupID, clsId)
 	newCls.LocusSize = locusSize
 	newCls.Transcripts = make([]*gene.CodingTranscript, 0, 1)
 	return newCls
 }
 
 // Process group into clusters.
-func ProcessCache(cache []*gene.CodingTranscript, BoundaryTolerance, EndBoundaryTolerance int, clusterChan chan *TranscriptCluster) {
+func ProcessCache(groupCount int, cache []*gene.CodingTranscript, BoundaryTolerance, EndBoundaryTolerance int, clusterChan chan *TranscriptCluster) {
 
 	// Slice to store clusters:
 	clusters := make([]*TranscriptCluster, 0, 100)
 	// Generate unique group id:
-	groupID := uuid.New().String()
+	groupID := fmt.Sprintf("ONT%d", groupCount)
 	//L.Println(groupID, len(cache))
 	// For all transcript in cache:
+	clsCount := 0
 	for _, tr := range cache {
 		// Search for matching cluster:
 		nrCls := searchClusters(tr, clusters, BoundaryTolerance, EndBoundaryTolerance)
 		if nrCls < 0 {
 			// No match found, create new cluster:
-			newCls := NewCluster(groupID, len(cache))
+			newCls := NewCluster(groupID, clsCount, len(cache))
 			newCls.Transcripts = append(newCls.Transcripts, tr)
 			clusters = append(clusters, newCls)
+			clsCount++
 		} else {
 			// Add to matching cluster:
 			clusters[nrCls].Transcripts = append(clusters[nrCls].Transcripts, tr)
