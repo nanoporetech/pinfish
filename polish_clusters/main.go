@@ -43,7 +43,7 @@ func main() {
 				reads = getClusterFromReads(readIds, allReads)
 			}
 			// Polish cluster using minimap2 and racon:
-			PolishCluster(clusterId, reads, outChan, args.TempDir, int(args.MaxProcs), args.MinimapParams, args.RaconParams)
+			PolishCluster(clusterId, reads, int(args.PolSize), outChan, args.TempDir, int(args.MaxProcs), args.MinimapParams, args.SpoaParams)
 		}
 	}
 

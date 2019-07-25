@@ -10,8 +10,28 @@ import (
 	"sort"
 )
 
+type byNiceLen []*Seq
+
+func (s byNiceLen) Len() int {
+	return len(s)
+}
+
+func (s byNiceLen) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s byNiceLen) Less(i, j int) bool {
+	if len(s[i].Seq) > len(s[j].Seq) {
+		return true
+	}
+	if len(s[i].Seq) < len(s[j].Seq) {
+		return false
+	}
+	return s[i].Acc > s[j].Acc
+}
+
 // Polish cluster using minimap2 and racon.
-func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot string, threads int, minimapParams, raconParams string) {
+func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Seq, tempRoot string, threads int, minimapParams, spoaParams string) {
 	// Set up working space:
 	wspace, err := ioutil.TempDir(tempRoot, "pinfish_"+clusterId+"_")
 	wspace, _ = filepath.Abs(wspace)
@@ -21,26 +41,19 @@ func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot s
 
 	L.Printf("Polishing cluster %s of size %d\n", clusterId, len(reads))
 
-	// Picck a reference sequence from cluster:
-	ref, refSeq := CreateReference(clusterId, reads, wspace)
-	_ = refSeq
-	readsFq := WriteReads(reads, wspace)
-
-	// Align reads using minimap2:
-	sam := filepath.Join(wspace, "alignments.sam")
-	BashExec(fmt.Sprintf("minimap2 -ax map-ont -t %d -k14 %s %s %s | samtools view -h -F 2304 > %s", threads, minimapParams, ref, readsFq, sam))
-
-	// Generate overlaps using minimap2:
-	//paf := filepath.Join(wspace, "overlaps.paf")
-	//BashExec(fmt.Sprintf("minimap2 -x ava-ont -k14 %s %s > %s", ref, readsFq, paf))
+	sort.Sort(byNiceLen(reads))
+	refSeq := reads[0]
+	readsFq := WriteReads(reads, wspace, polSize)
 
 	// Polish reference using racon:
-	cons := filepath.Join(wspace, "consensus.fq")
-	BashExec(fmt.Sprintf("racon -t %d -q -1 %s %s %s %s > %s", threads, raconParams, readsFq, sam, ref, cons))
+	cons := filepath.Join(wspace, "consensus.fas")
+	BashExec(fmt.Sprintf("spoa %s -r 0 %s > %s", spoaParams, readsFq, cons))
+	//BashExec(fmt.Sprintf("echo -n '>' > %s; spoa %s -r 0 %s > %s", cons, spoaParams, readsFq, cons))
 
 	if FileSize(cons) > 0 {
 		// We have a consensus:
-		consSeq := ReadFirstSeq(cons)
+		consSeq := new(Seq)
+		consSeq.Seq = ReadSpoaCons(cons)
 		consSeq.Id = fmt.Sprintf("%s|%d", clusterId, len(reads))
 		// Reference read mapped to the reverse strand:
 		if refSeq.Rev {
@@ -132,13 +145,20 @@ func getMedian(segments []*Seq) Seq {
 }
 
 // Write all reads in a fastq in workspace:
-func WriteReads(reads []*Seq, wspace string) string {
+func WriteReads(reads []*Seq, wspace string, maxReads int) string {
+	if maxReads > len(reads) {
+		maxReads = len(reads)
+	}
 
-	readsFastq := filepath.Join(wspace, "reads.fq")
-	outChan, flushChan := NewSeqWriterChan(readsFastq, "fastq", 500)
+	readsFastq := filepath.Join(wspace, "reads.fasta")
+	outChan, flushChan := NewSeqWriterChan(readsFastq, "fasta", 200)
 
-	for _, read := range reads {
+	for i, read := range reads {
+		if i >= maxReads {
+			break
+		}
 		outChan <- read
+		i++
 	}
 	close(outChan)
 	<-flushChan

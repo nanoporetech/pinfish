@@ -72,6 +72,18 @@ func NewSeqReaderF(file string) (seqio.Reader, *os.File) {
 	return reader, fh
 }
 
+// Read sequence from spoa output.
+func ReadSpoaCons(file string) string {
+	fh := openFile(file)
+	buf := bufio.NewScanner(fh)
+	if !buf.Scan() {
+		panic("Error reading consensus!")
+	}
+	buf.Scan()
+	fh.Close()
+	return buf.Text()
+}
+
 // Read first sequence from file.
 func ReadFirstSeq(file string) *Seq {
 	reader, fh := NewSeqReaderF(file)

@@ -12,6 +12,7 @@ type Seq struct {
 	Seq  string
 	Qual []byte
 	Rev  bool
+	Acc  float64
 }
 
 // Get sequence as string from a biogo Sequence object.
