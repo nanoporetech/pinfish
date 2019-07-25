@@ -70,7 +70,7 @@ func readLeftClip(r *sam.Record) int {
 	if r.Flags&sam.Unmapped != 0 {
 		return 0
 	}
-	if r.Cigar[0].Type() == sam.CigarSoftClipped || r.Cigar[0].Type() == sam.CigarHardClipped {
+	if r.Cigar[0].Type() == sam.CigarSoftClipped {
 		return int(r.Cigar[0].Len())
 	}
 	return 0
@@ -81,7 +81,7 @@ func readRightClip(r *sam.Record) int {
 		return 0
 	}
 	last := len(r.Cigar) - 1
-	if r.Cigar[last].Type() == sam.CigarSoftClipped || r.Cigar[last].Type() == sam.CigarHardClipped {
+	if r.Cigar[last].Type() == sam.CigarSoftClipped {
 		return int(r.Cigar[last].Len())
 	}
 	return 0
