@@ -31,7 +31,7 @@ func (s byNiceLen) Less(i, j int) bool {
 }
 
 // Polish cluster using minimap2 and racon.
-func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Seq, tempRoot string, threads int, minimapParams, spoaParams string) {
+func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Seq, doneChan chan string, tempRoot string, threads int, minimapParams, spoaParams string) {
 	// Set up working space:
 	wspace, err := ioutil.TempDir(tempRoot, "pinfish_"+clusterId+"_")
 	wspace, _ = filepath.Abs(wspace)
@@ -39,11 +39,13 @@ func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Se
 		L.Fatalf("Failed to create temporary directory: %s\n", err)
 	}
 
-	L.Printf("Polishing cluster %s of size %d\n", clusterId, len(reads))
+	done := fmt.Sprintf("Finished polishing cluster %s of size %d\n", clusterId, len(reads))
 
 	sort.Sort(byNiceLen(reads))
+	totalReads := len(reads)
 	refSeq := reads[0]
 	readsFq := WriteReads(reads, wspace, polSize)
+	reads = nil
 
 	// Polish reference using racon:
 	cons := filepath.Join(wspace, "consensus.fas")
@@ -54,7 +56,7 @@ func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Se
 		// We have a consensus:
 		consSeq := new(Seq)
 		consSeq.Seq = ReadSpoaCons(cons)
-		consSeq.Id = fmt.Sprintf("%s|%d", clusterId, len(reads))
+		consSeq.Id = fmt.Sprintf("%s|%d", clusterId, totalReads)
 		// Reference read mapped to the reverse strand:
 		if refSeq.Rev {
 			consSeq.Seq = RevCompDNA(consSeq.Seq)
@@ -75,6 +77,7 @@ func PolishCluster(clusterId string, reads []*Seq, polSize int, outChan chan *Se
 	if err != nil {
 		L.Fatalf("Failed to remove temporary directory %s: %s\n", wspace, err)
 	}
+	doneChan <- done
 }
 
 // Create a reference sequence for a cluster.

@@ -34,7 +34,7 @@ func (a *CmdArgs) Parse() {
 	flag.Int64Var(&a.MaxProcs, "t", 4, "Number of cores to use.")
 	flag.Int64Var(&a.PolSize, "S", 150, "Use maximum this many reads for polishing clusters.")
 	flag.StringVar(&a.MinimapParams, "x", "", "Arguments passed to minimap2.")
-	flag.StringVar(&a.SpoaParams, "y", "", "Arguments passed to racon.")
+	flag.StringVar(&a.SpoaParams, "y", "", "Arguments passed to spoa.")
 	flag.StringVar(&a.TempDir, "d", "", "Location of temporary directory.")
 	flag.BoolVar(&a.SmallMem, "m", false, "Do not load all reads in memory (slower).")
 	flag.BoolVar(&help, "h", false, "Print out help message.")

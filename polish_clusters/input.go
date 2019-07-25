@@ -164,7 +164,10 @@ func LoadReadsFromBam(bamFile string, readIds []string, nrProc int) []*Seq {
 			}
 		}
 	}
-
+	err := bamReader.Close()
+	if err != nil {
+		panic(err)
+	}
 	return res
 }
 
@@ -191,6 +194,9 @@ func LoadAllReadsFromBam(bamFile string, nrProc int) map[string]*Seq {
 			res[seq.Id] = seq
 		}
 	}
-
+	err := bamReader.Close()
+	if err != nil {
+		panic(err)
+	}
 	return res
 }
