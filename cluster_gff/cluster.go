@@ -46,8 +46,8 @@ func ClusterTranscriptStream(trStream chan *gene.CodingTranscript, BoundaryToler
 			}
 		}
 		// Process last group:
-		groupCount++
 		ProcessCache(groupCount, cache, BoundaryTolerance, EndBoundaryTolerance, clusterChan)
+		groupCount++
 
 		close(clusterChan)
 	}()
