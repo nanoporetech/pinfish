@@ -1,0 +1,27 @@
+##gff-version 2
+SIRV1	pinfish	mRNA	11404	11599	1150	+	.	gene_id "25437167-b0d9-4c48-9d81-69f05c7ac90e"; transcript_id "289ed951-14e6-4c94-a619-512b17b95689_part2";
+SIRV1	pinfish	exon	11404	11599	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689_part2";
+SIRV2	pinfish	mRNA	11404	11599	1150	.	.	gene_id "25437167-b0d9-4c48-9d81-69f05c7ac90e"; transcript_id "289ed951-14e6-4c94-a619-512b17b95689_partu";
+SIRV2	pinfish	exon	11404	11599	1150	.	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689_partu";
+SIRV2	pinfish	mRNA	11404	11599	1150	.	.	gene_id "25437167-b0d9-4c48-9d81-69f05c7ac90e"; transcript_id "289ed951-14e6-4c94-a619-512b17b95689_partu2";
+SIRV2	pinfish	exon	11404	11599	1150	.	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689_partu2";
+SIRV1	pinfish	mRNA	6452	10366	39	-	.	gene_id "bdb0db2f-a52f-4262-a7c3-e64e7999322c"; transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1";
+SIRV1	pinfish	exon	6452	6473	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1";
+SIRV1	pinfish	exon	6561	6813	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1";
+SIRV1	pinfish	exon	7553	7814	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1";
+SIRV1	pinfish	exon	10283	10366	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1";
+SIRV1	pinfish	mRNA	6452	10366	39	-	.	gene_id "bdb0db2f-a52f-4262-a7c3-e64e7999322c"; transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_skip";
+SIRV1	pinfish	exon	6452	6473	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_skip";
+SIRV1	pinfish	exon	6561	6813	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_skip";
+SIRV1	pinfish	exon	10283	10366	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_skip";
+SIRV1	pinfish	mRNA	6454	7814	39	-	.	gene_id "bdb0db2f-a52f-4262-a7c3-e64e7999322c"; transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_part";
+SIRV1	pinfish	exon	6454	6473	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_part";
+SIRV1	pinfish	exon	6561	6813	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_part";
+SIRV1	pinfish	exon	7553	7814	39	-	.	transcript_id "871870d5-d85c-4583-84fd-0a8d32b6f3f1_part";
+SIRV1	pinfish	mRNA	10606	11596	1150	+	.	gene_id "25437167-b0d9-4c48-9d81-69f05c7ac90e"; transcript_id "289ed951-14e6-4c94-a619-512b17b95689";
+SIRV1	pinfish	exon	10606	10791	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689";
+SIRV1	pinfish	exon	10898	11187	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689";
+SIRV1	pinfish	exon	11404	11596	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689";
+SIRV1	pinfish	mRNA	10898	11599	1150	+	.	gene_id "25437167-b0d9-4c48-9d81-69f05c7ac90e"; transcript_id "289ed951-14e6-4c94-a619-512b17b95689_part";
+SIRV1	pinfish	exon	10898	11187	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689_part";
+SIRV1	pinfish	exon	11404	11599	1150	+	.	transcript_id "289ed951-14e6-4c94-a619-512b17b95689_part";
