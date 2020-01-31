@@ -62,7 +62,4 @@ func (a *CmdArgs) Parse() {
 	if a.TagReadStrand {
 		a.StrandBehaviour = StrandTagRead
 	}
-	if len(a.InputFiles) == 0 {
-		L.Fatalf("No input BAM files specified!")
-	}
 }
