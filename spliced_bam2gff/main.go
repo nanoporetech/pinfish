@@ -17,9 +17,14 @@ func main() {
 	runtime.GOMAXPROCS(int(args.MaxProcs))
 
 	// Iterate over input files:
-	for _, inBam := range args.InputFiles {
-		// Convert spliced BAM entries to GFF transcripts:
-		SplicedBam2GFF(inBam, os.Stdout, int(args.MaxProcs), args.MinimapInput, args.StrandBehaviour)
+	if len(args.InputFiles) != 0 {
+		for _, inBam := range args.InputFiles {
+			bamReader := NewBamReader(inBam, int(args.MaxProcs))
+			// Convert spliced BAM entries to GFF transcripts:
+			SplicedBam2GFF(bamReader, os.Stdout, int(args.MaxProcs), args.MinimapInput, args.StrandBehaviour)
+		}
+	} else {
+		bamReader := NewSTDINReader(int(args.MaxProcs))
+		SplicedBam2GFF(bamReader, os.Stdout, int(args.MaxProcs), args.MinimapInput, args.StrandBehaviour)
 	}
-
 }

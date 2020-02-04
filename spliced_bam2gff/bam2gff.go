@@ -2,24 +2,25 @@ package main
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/biogo/biogo/feat"
 	"github.com/biogo/biogo/feat/gene"
 	"github.com/biogo/biogo/feat/genome"
 	"github.com/biogo/biogo/io/featio/gff"
 	"github.com/biogo/biogo/seq"
+	"github.com/biogo/hts/bam"
 	"github.com/biogo/hts/sam"
-	"io"
 )
 
 // Turn a BAM file containing sliced alignments into GFF2 format annotation.
-func SplicedBam2GFF(inBam string, out io.Writer, nrProcBam int, minimapInput bool, strandBehaviour int) {
-	bamReader := NewBamReader(inBam, nrProcBam)
+func SplicedBam2GFF(inReader *bam.Reader, out io.Writer, nrProcBam int, minimapInput bool, strandBehaviour int) {
 
 	gffWriter := gff.NewWriter(out, 1000, true)
 
 	// Ierate over BAM records:
 	for {
-		record, err := bamReader.Read()
+		record, err := inReader.Read()
 
 		if err == io.EOF {
 			break
