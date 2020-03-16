@@ -28,7 +28,7 @@ func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot s
 
 	// Align reads using minimap2:
 	sam := filepath.Join(wspace, "alignments.sam")
-	BashExec(fmt.Sprintf("minimap2 -ax map-ont -t %d -k14 %s %s %s | samtools view -S -h -F 2304 > %s", threads, minimapParams, ref, readsFq, sam))
+	BashExec(fmt.Sprintf("minimap2 -ax map-ont -t %d -k14 %s %s %s | samtools view -S -h -F 2304 - > %s", threads, minimapParams, ref, readsFq, sam))
 
 	// Generate overlaps using minimap2:
 	//paf := filepath.Join(wspace, "overlaps.paf")
