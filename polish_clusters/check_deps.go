@@ -9,7 +9,6 @@ func CheckDependencies() {
 
 	checkBash()
 	checkMinimap2()
-	checkSamtools()
 	checkRacon()
 }
 
@@ -25,11 +24,6 @@ func checkBash() {
 // Checks for minimap2.
 func checkMinimap2() {
 	BashExec("minimap2 -h")
-}
-
-// Check for samtools.
-func checkSamtools() {
-	BashExec("samtools view -h")
 }
 
 // Check for racon.
