@@ -20,6 +20,7 @@ type CmdArgs struct {
 	MinimapParams string
 	RaconParams   string
 	SmallMem      bool
+	FromFasta     bool
 }
 
 // Parse command line arguments using the flag package.
@@ -35,6 +36,7 @@ func (a *CmdArgs) Parse() {
 	flag.StringVar(&a.RaconParams, "y", "", "Arguments passed to racon.")
 	flag.StringVar(&a.TempDir, "d", "", "Location of temporary directory.")
 	flag.BoolVar(&a.SmallMem, "m", false, "Do not load all reads in memory (slower).")
+	flag.BoolVar(&a.FromFasta, "f", false, "The BAM file was generated from alignement of a fasta rather than fastq file")
 	flag.BoolVar(&help, "h", false, "Print out help message.")
 	flag.BoolVar(&version, "V", false, "Print out version.")
 
