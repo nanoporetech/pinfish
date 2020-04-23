@@ -11,7 +11,7 @@ import (
 )
 
 // Polish cluster using minimap2 and racon.
-func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot string, threads int, minimapParams, raconParams string) {
+func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot string, threads int, minimapParams, raconParams string, bamContainsPhred bool) {
 	// Set up working space:
 	wspace, err := ioutil.TempDir(tempRoot, "pinfish_"+clusterId+"_")
 	wspace, _ = filepath.Abs(wspace)
@@ -22,9 +22,9 @@ func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot s
 	L.Printf("Polishing cluster %s of size %d\n", clusterId, len(reads))
 
 	// Picck a reference sequence from cluster:
-	ref, refSeq := CreateReference(clusterId, reads, wspace)
+	ref, refSeq := CreateReference(clusterId, reads, wspace, bamContainsPhred)
 	_ = refSeq
-	readsFq := WriteReads(reads, wspace)
+	readsFq := WriteReads(reads, wspace, bamContainsPhred)
 
 	// Align reads using minimap2:
 	sam := filepath.Join(wspace, "alignments.sam")
@@ -65,7 +65,7 @@ func PolishCluster(clusterId string, reads []*Seq, outChan chan *Seq, tempRoot s
 }
 
 // Create a reference sequence for a cluster.
-func CreateReference(id string, reads []*Seq, wspace string) (string, *Seq) {
+func CreateReference(id string, reads []*Seq, wspace string, bamContainsPhred bool) (string, *Seq) {
 	// Get (a) longest sequence from the cluster:
 	//tmp := getLongest(reads)
 	//tmp := getShortest(reads)
@@ -76,8 +76,15 @@ func CreateReference(id string, reads []*Seq, wspace string) (string, *Seq) {
 	longest.Id = id
 
 	// Write reference to workspace:
-	ref := filepath.Join(wspace, "reference.fq")
-	outChan, flushChan := NewSeqWriterChan(ref, "fastq", 1)
+	var ref, refSeqFormat string
+	if bamContainsPhred {
+		ref = filepath.Join(wspace, "reference.fq")
+		refSeqFormat = "fastq"
+	} else {
+		ref = filepath.Join(wspace, "reference.fa")
+		refSeqFormat = "fasta"
+	}
+	outChan, flushChan := NewSeqWriterChan(ref, refSeqFormat, 1)
 	outChan <- longest
 	close(outChan)
 	<-flushChan
@@ -132,10 +139,17 @@ func getMedian(segments []*Seq) Seq {
 }
 
 // Write all reads in a fastq in workspace:
-func WriteReads(reads []*Seq, wspace string) string {
+func WriteReads(reads []*Seq, wspace string, bamContainsPhred bool) string {
 
-	readsFastq := filepath.Join(wspace, "reads.fq")
-	outChan, flushChan := NewSeqWriterChan(readsFastq, "fastq", 500)
+	var readsFastq, readsFormat string
+	if bamContainsPhred {
+		readsFastq = filepath.Join(wspace, "reads.fq")
+		readsFormat = "fastq"
+	} else {
+		readsFastq = filepath.Join(wspace, "reads.fa")
+		readsFormat = "fasta"
+	}
+	outChan, flushChan := NewSeqWriterChan(readsFastq, readsFormat, 1)
 
 	for _, read := range reads {
 		outChan <- read
