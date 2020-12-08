@@ -25,6 +25,9 @@ func main() {
 	// Initialise output channel for consensus fasta:
 	outChan, flushChan := NewSeqWriterChan(args.ConsOut, "fasta", 100)
 
+	// Command line flag indicates BAM does not contain Phred Scores
+	bamContainsPhred := !args.FromFasta
+
 	var allReads map[string]*Seq
 	if !args.SmallMem {
 		// Read all BAM records if not in low memory mode:
@@ -43,7 +46,7 @@ func main() {
 				reads = getClusterFromReads(readIds, allReads)
 			}
 			// Polish cluster using minimap2 and racon:
-			PolishCluster(clusterId, reads, outChan, args.TempDir, int(args.MaxProcs), args.MinimapParams, args.RaconParams)
+			PolishCluster(clusterId, reads, outChan, args.TempDir, int(args.MaxProcs), args.MinimapParams, args.RaconParams, bamContainsPhred)
 		}
 	}
 
