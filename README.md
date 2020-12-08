@@ -1,6 +1,10 @@
 ![ONT_logo](/ONT_logo.png)
 
------------------------------
+We have a new bioinformatic resource that largely replaces the functionality of this project! See our new repository here: [https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms](https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms)
+
+The improved `spliced_bam2gff` tool is released at [https://github.com/nanoporetech/spliced_bam2gff](https://github.com/nanoporetech/spliced_bam2gff)
+
+This repository is now unsupported and we do not recommend its use. Please contact Oxford Nanopore: support@nanoporetech.com for help with your application if it is not possible to upgrade to our new resources, or we are missing key features.
 
 pinfish
 =======
